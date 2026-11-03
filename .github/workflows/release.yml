@@ -38,10 +38,17 @@ jobs:
 
       # The WCA OAuth client ID is public (it shows in every login URL), so a repository variable is fine.
       # Without it, the login page asks each user for their own client ID.
+      # Accepts a variable or a secret with this name.
       - name: Build portable folder
-        run: npm run portable
+        run: |
+          if [ -n "$VITE_WCA_CLIENT_ID" ]; then
+            echo "WCA client ID found. Login goes straight to WCA."
+          else
+            echo "::warning::No VITE_WCA_CLIENT_ID variable or secret. The app will ask users for a client ID."
+          fi
+          npm run portable
         env:
-          VITE_WCA_CLIENT_ID: ${{ vars.VITE_WCA_CLIENT_ID }}
+          VITE_WCA_CLIENT_ID: ${{ vars.VITE_WCA_CLIENT_ID || secrets.VITE_WCA_CLIENT_ID }}
 
       # zip keeps the executable flag of start.sh and the Linux node binary.
       - name: Zip
