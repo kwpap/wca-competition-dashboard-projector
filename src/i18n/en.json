@@ -14,7 +14,10 @@
   "login": {
     "intro": "Run the schedule of your WCA competition and show it on a projector.",
     "button": "Log in with WCA",
-    "missingClientId": "No WCA OAuth client ID configured. Set VITE_WCA_CLIENT_ID in .env.local and restart.",
+    "missingClientId": "To log in, paste the UID of your own WCA OAuth application:",
+    "clientIdSave": "Save",
+    "clientIdHint": "Create it at worldcubeassociation.org/oauth/applications/new with redirect URI {{uri}} and scopes \"public manage_competitions\".",
+    "clientIdChange": "Use another client ID",
     "failed": "Login failed or was cancelled.",
     "offline": "Saved competitions (offline)",
     "publicLabel": "Or open a competition from public WCA data (no login, read-only):",

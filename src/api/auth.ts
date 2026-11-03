@@ -1,20 +1,42 @@
 import { WCA_CLIENT_ID, WCA_ORIGIN } from '../config';
 
 const TOKEN_KEY = 'wca-token';
+// Client ID typed in on the login page. Lets a downloaded build use the user's own WCA application.
+const CLIENT_ID_KEY = 'wca-client-id';
 
 interface StoredToken {
   accessToken: string;
   expiresAt: number;
 }
 
-function redirectUri(): string {
+export function redirectUri(): string {
   return `${window.location.origin}/auth/callback`;
+}
+
+/** True when the client ID comes from the build (.env.local), so the user cannot change it. */
+export function isClientIdBuiltIn(): boolean {
+  return WCA_CLIENT_ID !== '';
+}
+
+/** The OAuth client ID: from the build, else the one the user typed in. Empty when there is none. */
+export function getClientId(): string {
+  if (isClientIdBuiltIn()) return WCA_CLIENT_ID;
+  return localStorage.getItem(CLIENT_ID_KEY) ?? '';
+}
+
+/** Saves the user's own client ID. An empty value removes it. */
+export function setClientId(clientId: string): void {
+  if (clientId) {
+    localStorage.setItem(CLIENT_ID_KEY, clientId);
+  } else {
+    localStorage.removeItem(CLIENT_ID_KEY);
+  }
 }
 
 /** Sends the browser to the WCA login page (OAuth implicit grant). */
 export function startLogin(): void {
   const params = new URLSearchParams({
-    client_id: WCA_CLIENT_ID,
+    client_id: getClientId(),
     redirect_uri: redirectUri(),
     response_type: 'token',
     scope: 'public manage_competitions',

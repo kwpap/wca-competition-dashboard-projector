@@ -123,13 +123,13 @@ You need this only to load competitions you manage, including the private WCIF. 
 2. Set:
    - **Redirect URI**: `http://localhost:5173/auth/callback`
    - **Scopes**: `public manage_competitions`
-3. Copy `.env.example` to `.env.local`.
-4. Set `VITE_WCA_CLIENT_ID` to the application's UID.
-5. Restart `npm run dev`.
+3. Give the app the application's UID, in one of two ways:
+   - **On the login page**: paste the UID into the client ID field. The app keeps it in the browser. This is the way for the downloaded portable app.
+   - **At build time**: copy `.env.example` to `.env.local`, set `VITE_WCA_CLIENT_ID`, and restart `npm run dev` or rebuild. A built-in ID hides the field.
 
 For testing against the WCA staging site, set `VITE_WCA_ORIGIN=https://staging.worldcubeassociation.org` and register the OAuth application there.
 
-The client ID is built into the app, so rebuild the portable folder after you change it. Port 5173 must stay fixed because it is part of the redirect URI.
+Released builds contain no client ID. Each organizer uses their own WCA application. Port 5173 must stay fixed because it is part of the redirect URI.
 
 ## Using the app at a competition
 
@@ -211,7 +211,7 @@ git push origin v0.2.0
 
 Or open **Actions → Release portable app → Run workflow** and type a tag.
 
-The app bakes in the WCA OAuth client ID at build time. Store it as a repository secret named `VITE_WCA_CLIENT_ID` (**Settings → Secrets and variables → Actions**). Without it, the released app works with public data only and has no login.
+Releases contain no WCA OAuth client ID. Each user pastes the UID of their own WCA application on the login page.
 
 ### Run it
 
@@ -417,7 +417,7 @@ To run the portable server while the dev server uses port 5173, set another port
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `VITE_WCA_CLIENT_ID` | empty | UID of your WCA OAuth application. Empty disables login. |
+| `VITE_WCA_CLIENT_ID` | empty | UID of your WCA OAuth application. When empty, the login page asks each user for their own. |
 | `VITE_WCA_ORIGIN` | `https://www.worldcubeassociation.org` | WCA site for the API and login. Use the staging site for tests. |
 
 Vite builds these values into the app. Rebuild after a change.
@@ -491,7 +491,7 @@ Event names, record texts and templates are translated when shown. A record anno
 | Problem | Fix |
 | --- | --- |
 | `Port 5173 is already in use` | Another copy of the app or the dev server is running. Close it. The port is fixed because of the OAuth redirect URI. |
-| "No WCA OAuth client ID configured" | Set `VITE_WCA_CLIENT_ID` in `.env.local`, then restart or rebuild. |
+| The login page asks for a client ID | Paste the UID of your WCA OAuth application (see [WCA login setup](#wca-login-setup-oauth)), or set `VITE_WCA_CLIENT_ID` in `.env.local` and rebuild. |
 | Login fails or loops | The redirect URI of the OAuth app must be exactly `http://localhost:5173/auth/callback`. |
 | "Your WCA session expired" on Refresh | Log in again. Competitions opened from public data cannot use "Refresh from WCA". Open them again from the start page instead. |
 | "No assignments found" | Generate groups with Groupifier, Delegate Dashboard or AGE, then press "Refresh from WCA". |

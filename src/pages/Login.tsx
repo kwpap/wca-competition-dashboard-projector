@@ -1,8 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { getToken, startLogin } from '../api/auth';
-import { WCA_CLIENT_ID } from '../config';
+import { getClientId, getToken, isClientIdBuiltIn, redirectUri, setClientId, startLogin } from '../api/auth';
 import { cachedCompetitions } from '../state/storage';
 
 export default function Login() {
@@ -10,6 +9,19 @@ export default function Login() {
   const navigate = useNavigate();
   const [publicId, setPublicId] = useState('');
   const cached = cachedCompetitions();
+  const [clientId, setClientIdState] = useState(getClientId);
+  const [clientIdInput, setClientIdInput] = useState('');
+
+  function saveClientId(value: string) {
+    setClientId(value);
+    setClientIdState(getClientId());
+    setClientIdInput('');
+  }
+
+  function submitClientId(event: FormEvent) {
+    event.preventDefault();
+    if (clientIdInput.trim()) saveClientId(clientIdInput.trim());
+  }
 
   useEffect(() => {
     if (getToken()) navigate('/competitions', { replace: true });
@@ -25,12 +37,37 @@ export default function Login() {
       <h1>{t('app.title')}</h1>
       <p className="muted">{t('login.intro')}</p>
 
-      {WCA_CLIENT_ID ? (
-        <button className="btn btn-primary btn-xl" onClick={startLogin}>
-          {t('login.button')}
-        </button>
+      {clientId ? (
+        <>
+          <button className="btn btn-primary btn-xl" onClick={startLogin}>
+            {t('login.button')}
+          </button>
+          {!isClientIdBuiltIn() && (
+            <button className="btn" onClick={() => saveClientId('')}>
+              {t('login.clientIdChange')}
+            </button>
+          )}
+        </>
       ) : (
-        <p className="error">{t('login.missingClientId')}</p>
+        <form className="public-form" onSubmit={submitClientId}>
+          <label className="muted" htmlFor="client-id">
+            {t('login.missingClientId')}
+          </label>
+          <div className="row">
+            <input
+              id="client-id"
+              className="text-input"
+              value={clientIdInput}
+              onChange={(e) => setClientIdInput(e.target.value)}
+              autoComplete="off"
+              spellCheck={false}
+            />
+            <button className="btn" type="submit" disabled={!clientIdInput.trim()}>
+              {t('login.clientIdSave')}
+            </button>
+          </div>
+          <p className="muted">{t('login.clientIdHint', { uri: redirectUri() })}</p>
+        </form>
       )}
 
       <form className="public-form" onSubmit={openPublic}>

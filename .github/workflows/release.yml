@@ -36,11 +36,9 @@ jobs:
         run: |
           node -e "const f=(o,p='')=>Object.entries(o).flatMap(([k,v])=>typeof v==='object'?f(v,p+k+'.'):[p+k]);const r=n=>new Set(f(require('./src/i18n/'+n+'.json')));const en=r('en'),el=r('el');const d=[...en].filter(k=>!el.has(k)).concat([...el].filter(k=>!en.has(k)));if(d.length){console.error('Keys differ:',d);process.exit(1)}"
 
-      # The client ID is baked into the app. Without the secret, the build works with public data only.
+      # No client ID on purpose: each user pastes their own on the login page.
       - name: Build portable folder
         run: npm run portable
-        env:
-          VITE_WCA_CLIENT_ID: ${{ secrets.VITE_WCA_CLIENT_ID }}
 
       # zip keeps the executable flag of start.sh and the Linux node binary.
       - name: Zip

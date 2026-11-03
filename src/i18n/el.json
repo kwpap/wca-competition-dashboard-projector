@@ -14,7 +14,10 @@
   "login": {
     "intro": "Διαχειριστείτε το πρόγραμμα του διαγωνισμού σας και προβάλετέ το σε προβολέα.",
     "button": "Σύνδεση με WCA",
-    "missingClientId": "Δεν έχει οριστεί WCA OAuth client ID. Ορίστε το VITE_WCA_CLIENT_ID στο .env.local και κάντε επανεκκίνηση.",
+    "missingClientId": "Για σύνδεση, επικολλήστε το UID της δικής σας εφαρμογής WCA OAuth:",
+    "clientIdSave": "Αποθήκευση",
+    "clientIdHint": "Δημιουργήστε τη στο worldcubeassociation.org/oauth/applications/new με redirect URI {{uri}} και δικαιώματα (scopes) \"public manage_competitions\".",
+    "clientIdChange": "Χρήση άλλου client ID",
     "failed": "Η σύνδεση απέτυχε ή ακυρώθηκε.",
     "offline": "Αποθηκευμένοι διαγωνισμοί (εκτός σύνδεσης)",
     "publicLabel": "Ή ανοίξτε έναν διαγωνισμό από τα δημόσια δεδομένα του WCA (χωρίς σύνδεση, μόνο για ανάγνωση):",
