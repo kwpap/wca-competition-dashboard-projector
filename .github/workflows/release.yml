@@ -36,9 +36,12 @@ jobs:
         run: |
           node -e "const f=(o,p='')=>Object.entries(o).flatMap(([k,v])=>typeof v==='object'?f(v,p+k+'.'):[p+k]);const r=n=>new Set(f(require('./src/i18n/'+n+'.json')));const en=r('en'),el=r('el');const d=[...en].filter(k=>!el.has(k)).concat([...el].filter(k=>!en.has(k)));if(d.length){console.error('Keys differ:',d);process.exit(1)}"
 
-      # No client ID on purpose: each user pastes their own on the login page.
+      # The WCA OAuth client ID is public (it shows in every login URL), so a repository variable is fine.
+      # Without it, the login page asks each user for their own client ID.
       - name: Build portable folder
         run: npm run portable
+        env:
+          VITE_WCA_CLIENT_ID: ${{ vars.VITE_WCA_CLIENT_ID }}
 
       # zip keeps the executable flag of start.sh and the Linux node binary.
       - name: Zip

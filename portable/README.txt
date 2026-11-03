@@ -20,9 +20,10 @@ Folders
 
 Notes
   - Public competition data works without login.
-  - To log in with WCA, create your own OAuth application at
+  - Press "Log in with WCA" to load the competitions you manage.
+    If the app asks for a client ID instead, create an OAuth application at
     https://www.worldcubeassociation.org/oauth/applications/new
     with redirect URI http://localhost:5173/auth/callback and scopes
-    "public manage_competitions". Paste its UID on the app's login page.
+    "public manage_competitions", then paste its UID.
   - Linux works best with Chromium (sudo apt install chromium).
   - Close the app before unplugging a USB stick.

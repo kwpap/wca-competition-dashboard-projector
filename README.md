@@ -124,12 +124,12 @@ You need this only to load competitions you manage, including the private WCIF. 
    - **Redirect URI**: `http://localhost:5173/auth/callback`
    - **Scopes**: `public manage_competitions`
 3. Give the app the application's UID, in one of two ways:
-   - **On the login page**: paste the UID into the client ID field. The app keeps it in the browser. This is the way for the downloaded portable app.
+   - **On the login page**: paste the UID into the client ID field. The app keeps it in the browser. Use this for a build without a client ID.
    - **At build time**: copy `.env.example` to `.env.local`, set `VITE_WCA_CLIENT_ID`, and restart `npm run dev` or rebuild. A built-in ID hides the field.
 
 For testing against the WCA staging site, set `VITE_WCA_ORIGIN=https://staging.worldcubeassociation.org` and register the OAuth application there.
 
-Released builds contain no client ID. Each organizer uses their own WCA application. Port 5173 must stay fixed because it is part of the redirect URI.
+Official releases have the client ID built in. Port 5173 must stay fixed because it is part of the redirect URI.
 
 ## Using the app at a competition
 
@@ -211,7 +211,7 @@ git push origin v0.2.0
 
 Or open **Actions → Release portable app → Run workflow** and type a tag.
 
-Releases contain no WCA OAuth client ID. Each user pastes the UID of their own WCA application on the login page.
+The release build takes the WCA OAuth client ID from the repository variable `VITE_WCA_CLIENT_ID` (**Settings → Secrets and variables → Actions → Variables**). Users then just press "Log in with WCA". The client ID is not a secret: it shows in the address bar on every login. Without the variable, the login page asks each user for the UID of their own WCA application.
 
 ### Run it
 
