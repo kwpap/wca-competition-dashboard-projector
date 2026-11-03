@@ -1,0 +1,64 @@
+# Builds the portable app and publishes it as a GitHub release.
+# Trigger: push a version tag, e.g.  git tag v0.1.0 ; git push origin v0.1.0
+# Or run it by hand from the Actions tab (enter a tag name there).
+
+name: Release portable app
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Version tag to create, e.g. v0.1.0'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # build-portable.mjs bundles the same Node version that runs it.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Check translation keys
+        run: |
+          node -e "const f=(o,p='')=>Object.entries(o).flatMap(([k,v])=>typeof v==='object'?f(v,p+k+'.'):[p+k]);const r=n=>new Set(f(require('./src/i18n/'+n+'.json')));const en=r('en'),el=r('el');const d=[...en].filter(k=>!el.has(k)).concat([...el].filter(k=>!en.has(k)));if(d.length){console.error('Keys differ:',d);process.exit(1)}"
+
+      # The client ID is baked into the app. Without the secret, the build works with public data only.
+      - name: Build portable folder
+        run: npm run portable
+        env:
+          VITE_WCA_CLIENT_ID: ${{ secrets.VITE_WCA_CLIENT_ID }}
+
+      # zip keeps the executable flag of start.sh and the Linux node binary.
+      - name: Zip
+        run: |
+          cd release
+          zip -r -9 "../WCA-Stage-${TAG}.zip" WCA-Stage
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$TAG" "WCA-Stage-${TAG}.zip" \
+            --target "$GITHUB_SHA" \
+            --title "WCA Stage ${TAG}" \
+            --notes "Portable WCA Stage for Windows and Linux. No install needed.
+
+          1. Download WCA-Stage-${TAG}.zip and unzip it (for example onto a USB stick).
+          2. Windows: double-click start.bat. Linux: run sh start.sh.
+
+          Node.js is included. See README.txt inside the folder." \
+            --generate-notes

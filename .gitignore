@@ -1,0 +1,35 @@
+# Leading "/" anchors a pattern to the repo root.
+# Without it, "data" and "reports" would also hide src/data/ and src/reports/.
+
+# Dependencies (npm ci)
+/node_modules/
+
+# Build output (npm run build, npm run portable)
+/dist/
+/release/
+*.zip
+
+# Node.js downloads for the portable build
+/.cache/
+
+# Runtime data written by the local API: competition state, WCIF, reports
+/data/
+/reports/
+
+# Secrets: holds the WCA OAuth client ID
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editors and OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.cursor/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
