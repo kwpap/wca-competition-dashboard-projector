@@ -24,6 +24,7 @@ import { attemptSegments } from '../model/attempts';
 import { buildModel, isCountdown, isFinale } from '../model/competition';
 import { activityLabel, labelParts } from '../model/labels';
 import { firstSlotOfNextDay, roomStatus, slotTimes } from '../model/scheduleEngine';
+import { isScreenMode } from '../state/screenSync';
 import {
   DEFAULT_PROJECTOR_SETTINGS,
   EMPTY_CALLS,
@@ -64,7 +65,8 @@ export default function Projector() {
   }, [i18n, settings.language]);
   const model = useMemo(() => (wcif ? buildModel(wcif, settings.countdownMinutes) : null), [wcif, settings.countdownMinutes]);
   const now = useNow(1000);
-  const tooLoud = useNoiseMonitor(settings.noiseMeter, settings.noiseSensitivity, setNoise);
+  // Only the projector PC listens. A TV screen has no microphone access over plain http.
+  const tooLoud = useNoiseMonitor(settings.noiseMeter && !isScreenMode(), settings.noiseSensitivity, setNoise);
 
   if (!model || model.rooms.length === 0) {
     return (

@@ -123,6 +123,12 @@ export interface StageState {
 
 export const EMPTY_STAGE: StageState = { roomId: null, log: [], stoppedAt: null };
 
+/**
+ * Fired on window when a TV screen writes state fetched from the server into localStorage. Detail: the key.
+ * The "storage" event does not fire for writes in the same window.
+ */
+export const SCREEN_SYNC_EVENT = 'wca-screen-sync';
+
 export function readJson<T>(key: string, fallback: T): T {
   const raw = localStorage.getItem(key);
   if (raw === null) return fallback;
@@ -155,7 +161,7 @@ export function writeJson(key: string, value: unknown): void {
 /**
  * State persisted in localStorage.
  * Other windows of the app receive changes through the "storage" event,
- * which keeps the control and projector windows in sync.
+ * which keeps the control and projector windows in sync. TV screens get them through SCREEN_SYNC_EVENT.
  */
 export function useSyncedStorage<T>(key: string, fallback: T): [T, (update: T | ((prev: T) => T)) => void] {
   const fallbackRef = useRef(fallback);
@@ -167,8 +173,15 @@ export function useSyncedStorage<T>(key: string, fallback: T): [T, (update: T | 
     function onStorage(event: StorageEvent) {
       if (event.key === key) setValue(readJson(key, fallbackRef.current));
     }
+    function onScreenSync(event: Event) {
+      if ((event as CustomEvent<string>).detail === key) setValue(readJson(key, fallbackRef.current));
+    }
     window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
+    window.addEventListener(SCREEN_SYNC_EVENT, onScreenSync);
+    return () => {
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener(SCREEN_SYNC_EVENT, onScreenSync);
+    };
   }, [key]);
 
   const update = useCallback(

@@ -4,6 +4,7 @@
 import { createReadStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import http from 'node:http';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createApi } from './api.mjs';
@@ -12,6 +13,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const APP_DIR = path.join(ROOT, 'app');
 // Must match the redirect URI registered in the WCA OAuth app.
 const PORT = Number(process.env.PORT) || 5173;
+// 0.0.0.0 lets TVs on the same Wi-Fi open the projector. Set HOST=127.0.0.1 to keep the app on this computer only.
+const HOST = process.env.HOST || '0.0.0.0';
+const LAN = HOST !== '127.0.0.1' && HOST !== 'localhost';
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -27,6 +31,7 @@ const MIME_TYPES = {
 const handleApi = createApi({
   dataDir: path.join(ROOT, 'data'),
   reportsDir: path.join(ROOT, 'reports'),
+  lan: LAN,
 });
 
 async function isFile(filePath) {
@@ -76,8 +81,15 @@ server.on('error', (error) => {
   throw error;
 });
 
-server.listen(PORT, '127.0.0.1', () => {
+server.listen(PORT, HOST, () => {
   console.log(`WCA Stage running at http://localhost:${PORT}`);
+  if (LAN) {
+    for (const { address } of Object.values(os.networkInterfaces()).flat()) {
+      if (address && /^\d+\.\d+\.\d+\.\d+$/.test(address) && !address.startsWith('127.')) {
+        console.log(`TV screens: http://${address}:${PORT}`);
+      }
+    }
+  }
   console.log(`Data:    ${path.join(ROOT, 'data')}`);
   console.log(`Reports: ${path.join(ROOT, 'reports')}`);
   console.log('Close this window (or press Ctrl+C) to stop.');

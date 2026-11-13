@@ -2653,3 +2653,112 @@ section.topbar .btn {
 .results-wide .result-attempt {
   color: var(--muted);
 }
+
+/* TV screens wizard */
+
+.screens-wizard {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px 24px;
+  align-items: start;
+}
+
+.screens-steps {
+  margin: 0;
+  padding-left: 1.4em;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 1.05rem;
+}
+
+.screens-address {
+  margin: 8px 0;
+  font-size: 2.4rem;
+  font-weight: 700;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  color: var(--accent);
+  user-select: all;
+}
+
+.screens-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  max-width: 260px;
+  text-align: center;
+}
+
+.qr-code {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.screens-url {
+  font-size: 0.85rem;
+  word-break: break-all;
+  user-select: all;
+}
+
+.screens-status {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--panel-2);
+}
+
+.screens-status.connected {
+  background: #e3f4ea;
+  color: #04622f;
+}
+
+.screens-status ul {
+  margin: 4px 0 0;
+  padding-left: 1.2em;
+}
+
+.screens-others,
+.screens-notes,
+.screens-help {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.screens-others p {
+  margin: 0;
+}
+
+.screens-help summary {
+  font-weight: 700;
+  cursor: pointer;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.screens-help li {
+  margin-bottom: 8px;
+}
+
+/* TV screen: start page and connection badge */
+
+.screen-start {
+  font-size: 1.4rem;
+}
+
+.screen-start .competition-card {
+  text-decoration: none;
+}
+
+.screen-offline {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 100;
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  background: var(--red);
+  color: #fff;
+  font-weight: 700;
+}

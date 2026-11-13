@@ -1,4 +1,5 @@
 import path from 'node:path';
+import legacy from '@vitejs/plugin-legacy';
 import react from '@vitejs/plugin-react';
 import { defineConfig, type Plugin } from 'vite';
 import { createApi } from './server/api.mjs';
@@ -16,6 +17,7 @@ function localApi(): Plugin {
       const handleApi = createApi({
         dataDir: path.resolve('data'),
         reportsDir: path.resolve('reports'),
+        lan: true,
       });
       server.middlewares.use((req, res, next) => {
         handleApi(req, res).then((handled) => {
@@ -27,10 +29,17 @@ function localApi(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), localApi()],
+  plugins: [
+    react(),
+    localApi(),
+    // Smart TV browsers are often years behind. This adds a second build that older browsers load instead.
+    legacy({ targets: ['defaults', 'chrome >= 61', 'safari >= 11', 'firefox >= 60'], modernPolyfills: true }),
+  ],
   server: {
     port: 5173,
     strictPort: true,
+    // Listen on the network too, so TVs on the same Wi-Fi can open the projector.
+    host: true,
     // Root folders only. "**/data/**" would also stop hot reload for src/data/ and src/reports/.
     watch: { ignored: ['data', 'reports', 'release', '.cache'].map((dir) => rootGlob(dir)) },
   },

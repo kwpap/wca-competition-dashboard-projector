@@ -13,6 +13,7 @@ import { PeoplePicker } from '../components/PeoplePicker';
 import { PersonDetail } from '../components/PersonDetail';
 import { PreviousRoundColumn } from '../components/PreviousRoundColumn';
 import { RoleColumns } from '../components/RoleColumns';
+import { ScreensWizard } from '../components/ScreensWizard';
 import { describeRound } from '../components/roundRules';
 import { TimeBar } from '../components/TimeBar';
 import { downloadBlob, downloadFile } from '../format/download';
@@ -70,6 +71,7 @@ type ModalState =
   | { type: 'log' }
   | { type: 'announcements' }
   | { type: 'options' }
+  | { type: 'screens' }
   | { type: 'picker'; role: NamedCallRole }
   | null;
 
@@ -366,6 +368,9 @@ function ControlView({ model, results, onRefresh, refreshing, refreshError }: Co
         <button className="btn btn-primary" onClick={openProjector}>
           {t('control.openProjector')}
         </button>
+        <button className="btn" onClick={() => setModal({ type: 'screens' })}>
+          {t('control.tvScreens')}
+        </button>
         <button className="btn" onClick={() => setModal({ type: 'announcements' })}>
           {t('control.announcements', { count: announcements.filter((a) => a.active).length })}
         </button>
@@ -543,6 +548,8 @@ function ControlView({ model, results, onRefresh, refreshing, refreshError }: Co
           onClose={() => setModal(null)}
         />
       )}
+
+      {modal?.type === 'screens' && <ScreensWizard competitionId={competitionId} onClose={() => setModal(null)} />}
 
       {modal?.type === 'log' && (
         <Modal

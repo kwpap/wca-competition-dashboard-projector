@@ -8,6 +8,13 @@ Start
 The app opens in its own browser window. Close the window "WCA Stage server"
 (Windows) or the browser window (Linux) to stop it.
 
+TV screens
+  Any smart TV, phone or laptop on the same Wi-Fi can show the projector.
+  Press "TV screens" on the control screen. It shows the address to type in
+  the TV's browser (for example 192.168.1.23:5173) and what to check if the
+  TV cannot connect. On Windows, allow Node.js when the firewall asks.
+  TV screens can only watch. They cannot change anything.
+
 Folders
   data\      app data (schedule log, incidents, announcements, saved competitions)
              and the browser profile. Copy the whole folder to move or back up.

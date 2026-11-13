@@ -12,6 +12,7 @@ WCA Stage runs the schedule of a WCA speedcubing competition from a touch screen
 - **Countdown**: before the first activity of each day, a "Countdown" slot shows "Starting in HH:MM:SS" on the projector (`src/components/Countdown.tsx`). Its length is a projector setting (`countdownMinutes`, default 15).
 - **Finale**: after the last activity, the projector shows a full-screen celebration (`src/components/Finale.tsx`). It appears when the finale slot runs, or after "Stop for today" on the last day.
 - **PDF reports**: Options has a button that creates three PDFs: schedule adherence, incident log and records with attempt times (`src/reports/pdfReports.ts`).
+- **TV screens**: any smart TV or phone on the same Wi-Fi opens `http://<pc-ip>:5173`. It runs `ScreenApp` (start page and projector only) and polls the server for the projector state. "TV screens" on the control screen opens a wizard (`src/components/ScreensWizard.tsx`) with the address, a QR code, connected screens and troubleshooting.
 - **Portable app**: `npm run portable` builds a folder with Node.js for Windows and Linux. It runs from a USB stick with no install.
 
 The main users are Greek organizers, so Greek (`el`) is a first-class language next to English (`en`).
@@ -22,6 +23,7 @@ The main users are Greek organizers, so Greek (`el`) is a first-class language n
 2. **Keep the WCA login token out of the data folder.** `isAppKey` in `src/state/storage.ts` decides which `localStorage` keys go to `data/state/`. The token (`wca-token`) and the live noise status (`noise:*`) must stay out.
 3. **Every UI string goes through i18n.** Add each key to both `src/i18n/en.json` and `src/i18n/el.json`. The two files must have exactly the same keys. See "Checks" below.
 4. **Only the control window writes polled or automatic data.** The control window polls results and adds template and record announcements. The projector only reads. This prevents duplicates.
+7. **Other devices only read.** `server/api.mjs` answers requests from non-loopback addresses with the TV routes only (`/api/screens`, `/api/screen/:id`), and those send only projector keys. Never add incidents, `ui-settings` details or a write route for them.
 5. **Do not edit plan files** in `~/.cursor/plans/` unless the user asks.
 6. **No scramble-related features**, even "harmless" ones such as scramble images or scramble counts.
 
@@ -58,13 +60,15 @@ src/components/                 UI pieces used by the pages.
 src/hooks/                      useNow, useResultsPoller, useNoiseMonitor, useBrowseNavigation.
 src/state/storage.ts            Storage keys, settings types, useSyncedStorage.
 src/state/server.ts             Mirrors app keys to the local server (data/state/*.json).
+src/state/screenSync.ts         TV screens: detects screen mode, polls /api/screen/:id into localStorage.
+src/pages/ScreenApp.tsx         The app on a TV: start page (auto-opens a single competition) and projector.
 src/incidents/                  Incident editor, @-mentions, Markdown export.
 src/reports/                    Schedule log CSV, automatic report saving and the PDF reports.
 src/i18n/                       en.json, el.json, i18next setup.
 src/format/                     Time, result and download helpers.
 src/types/wcif.ts               The WCIF subset the app uses.
 server/api.mjs                  Local API: GET/PUT state, PUT reports (.csv, .md, .pdf). Shared by dev and portable.
-server/server.mjs               Portable server: serves app/ and the API on 127.0.0.1:5173.
+server/server.mjs               Portable server: serves app/ and the API on 0.0.0.0:5173 (HOST=127.0.0.1 for local only).
 scripts/build-portable.mjs      Builds release/WCA-Stage from dist/, server/ and portable/.
 portable/                       start.bat, start.sh and README.txt for the portable folder.
 data/, reports/, release/       Generated. Git-ignored. Never commit them.
@@ -102,6 +106,7 @@ flowchart LR
   Control -->|"after 2 s, and PDFs on demand"| Reports["reports/competition-id/"]
 ```
 
+- **TV screens** have their own `localStorage`. `startScreenSync` fetches changed keys every 1.5 s, writes them and fires `SCREEN_SYNC_EVENT`, which `useSyncedStorage` also listens to (the `storage` event does not fire in the same window). Screen mode clears app keys at start and never mirrors.
 - **State** lives in `localStorage`. `useSyncedStorage(key, fallback)` reads and writes it. The browser `storage` event syncs other windows.
 - **Persistence**: `writeJson` mirrors app keys to the local API. At startup, `connectToServer` fills missing keys from `data/state/`. It never overwrites a key that already exists in `localStorage`.
 - **Offline**: everything works without network once the WCIF is saved. Without the local server (e.g. a static host) the app runs on `localStorage` alone.
@@ -162,6 +167,7 @@ There is no automated test suite in the repo yet. The owner's ad-hoc browser scr
 - **Git**: the repo is on GitHub (`kwpap/wca-competition-dashboard-projector`). Commit only when the owner asks. `.gitignore` patterns for root folders start with `/`: a bare `data` or `reports` would also hide `src/data/` and `src/reports/`.
 - **Port 5173** is fixed. If it is busy, the dev server fails on purpose. Another copy is probably running.
 - **`.env.local`** holds the OAuth client ID. Never print it or commit it.
+- **Old TV browsers**: `@vitejs/plugin-legacy` adds a second bundle for browsers older than Chrome 105. Keep `main.tsx` free of top-level `await`: old TV browsers cannot parse it.
 - **`vite preview`** does not mount the local API, so state and reports are not saved there. Use `npm run dev` or the portable server.
 - **localStorage limit** (about 5 MB): this is why `trimWcif` keeps only the fields the app uses.
 - **App slots are not in the WCIF.** The countdown and finale slots have negative ids and no assignments. Code that looks up slots in the WCIF must handle them. Use `isCountdown`, `isFinale` or `isAppSlot` to detect them. Reports skip them.

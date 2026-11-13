@@ -82,7 +82,8 @@
     "stopped": "Stopped for today",
     "adjustStart": "Adjust start (min)",
     "noAssignmentsForActivity": "No assignments for this activity.",
-    "noAssignments": "No assignments found. Generate them with Groupifier, Delegate Dashboard or AGE, then refresh."
+    "noAssignments": "No assignments found. Generate them with Groupifier, Delegate Dashboard or AGE, then refresh.",
+    "tvScreens": "TV screens"
   },
   "roles": {
     "competitors": "Competitors",
@@ -368,5 +369,42 @@
     "North America": "North America",
     "South America": "South America",
     "Oceania": "Oceania"
+  },
+  "screens": {
+    "title": "TV screens",
+    "intro": "Show the projector on a smart TV, phone or laptop on the same Wi-Fi. Nothing to install and nothing to set up on the TV.",
+    "noServer": "TV screens need the app's local server. Start the app with start.bat (Windows) or start.sh (Linux), or with npm run dev.",
+    "lanOff": "The server accepts this computer only (HOST=127.0.0.1). Start it without HOST to allow TV screens.",
+    "noNetwork": "This computer is not connected to a network. Connect it to the Wi-Fi first.",
+    "step1": "Connect the TV to the same Wi-Fi as this computer.",
+    "step2": "Open the web browser on the TV and type this address:",
+    "step2Pick": "With one competition the TV opens it by itself. With more, choose one on the TV.",
+    "browserHint": "Samsung: the Internet app. LG: Web Browser. Android TV or Google TV: install a browser from the Play Store.",
+    "step3": "Check that the TV shows up here:",
+    "waiting": "No screen connected yet.",
+    "connectedCount_one": "{{count}} screen connected",
+    "connectedCount_other": "{{count}} screens connected",
+    "otherCompetition": "shows another competition ({{id}})",
+    "qr": "Phones and some TVs can scan this code.",
+    "direct": "Direct link to this projector:",
+    "otherAddresses": "This computer is on more than one network. If the address above does not work, try:",
+    "virtual": "virtual adapter, TVs usually cannot reach it",
+    "notes": "Screens follow this control screen about 2 seconds later. They can only watch: they cannot change anything. The noise meter runs only on this computer's projector.",
+    "helpTitle": "The TV cannot open the page?",
+    "helpPhone": "Test with a phone on the same Wi-Fi first. If the phone works, the problem is the TV. If not, it is this computer or the Wi-Fi.",
+    "helpFirewallWindows": "Windows Firewall: when Windows asks about Node.js, click Allow. If you clicked Cancel: Windows Security > Firewall & network protection > Allow an app through firewall > Change settings, then tick Private and Public next to Node.js.",
+    "helpNetworkProfile": "Set the Wi-Fi as a private network: Settings > Network & internet > Wi-Fi > your network > Network profile type: Private.",
+    "helpFirewallLinux": "Linux firewall: if ufw is on, run sudo ufw allow {{port}}/tcp",
+    "helpIsolation": "Guest, hotel and school Wi-Fi often block devices from seeing each other. No setting on this computer fixes that. Use a phone hotspot or your own router and connect both this computer and the TV to it. The screens do not need internet.",
+    "helpHttp": "Type http://, not https://. If the TV starts a web search, type the address with http:// in front.",
+    "helpOldTv": "Blank or broken page: the TV browser is too old. Update the TV software, or plug in a streaming stick or a laptop with HDMI.",
+    "helpTvSleep": "The TV turns off after a while: turn off energy saving, the screensaver and auto power off in the TV settings.",
+    "helpPcSleep": "Keep this computer awake and the app open. If it sleeps, the screens freeze until it wakes up.",
+    "helpAddressChanged": "The address can change when the router restarts. Open this window again to see the new one.",
+    "startTitle": "Choose the competition to show",
+    "startNone": "No competition is open on the computer yet. Open one on the control screen first.",
+    "startError": "Cannot reach the WCA Stage computer. Check that it runs and that this device is on the same Wi-Fi.",
+    "cannotReach": "Cannot reach the WCA Stage computer. Trying again…",
+    "reconnecting": "Connection lost. Reconnecting…"
   }
 }

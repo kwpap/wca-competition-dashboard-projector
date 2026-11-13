@@ -71,6 +71,11 @@ Node.js is included. No install, no build.
   - a thank-you to the organizers, Delegates and volunteers.
 - The countdown and the finale have a plain, light look by default. Turn on **Festive style** in Options for a dark theme with glows, confetti and fireworks.
 
+**TV screens**
+
+- Any smart TV, phone or laptop on the same Wi-Fi can show the projector. Press **TV screens** on the control screen: it shows the address to type on the TV, a QR code, the screens connected right now and what to check when a TV cannot connect.
+- TV screens only watch. The server refuses every change from another device, and it sends them only what the projector shows (no incidents).
+
 **Languages**: English and Greek. The control screen and the projector can use different languages.
 
 ## How it works
@@ -79,6 +84,7 @@ Node.js is included. No install, no build.
 - All state lives in the browser's `localStorage`. The control and projector windows sync through it, so they must run in the same browser profile on the same PC.
 - A small local Node.js server also saves the state as JSON files in `data/state/`, and writes reports to `reports/<competition>/`. The dev server and the portable app both include it.
 - Without the local server (for example on a static web host) the app still works, but only in that browser.
+- TV screens on the network cannot share `localStorage`. They fetch the projector state from the local server every 1.5 s and only send the parts that changed.
 - Scrambles are removed from the WCIF before anything is saved. They never reach the screen or the disk.
 
 ## Requirements
@@ -141,7 +147,8 @@ Official releases have the client ID built in. Port 5173 must stay fixed because
 6. Browse groups with the arrow keys or a swipe. Use Ctrl+arrows to jump between events. "Back to now" returns to the running group.
 7. Press **Stop for today** after the last group of the day.
 8. **End of the competition**: the app adds a "Competition finale" activity after the last activity of every room. Press **Proceed now** to start it, and the projector switches to the finale. "Stop for today" on the last day shows the finale too.
-9. **Noise meter** (optional): turn it on in Options. Allow the microphone in the projector window. If the browser blocks audio, click once inside the projector window. Alerts start after a 2-minute warm-up while it learns the room level.
+9. **TV screens** (optional): press **TV screens** and follow the steps. Usually it is: connect the TV to the same Wi-Fi, open its browser and type the address shown, for example `192.168.1.23:5173`. On Windows, allow Node.js when the firewall asks the first time. Guest or hotel Wi-Fi often blocks devices from seeing each other. Then use a phone hotspot or your own router.
+10. **Noise meter** (optional): turn it on in Options. Allow the microphone in the projector window. If the browser blocks audio, click once inside the projector window. Alerts start after a 2-minute warm-up while it learns the room level.
 
 Reports update automatically while you work:
 
@@ -217,7 +224,7 @@ The release build takes the WCA OAuth client ID from the repository variable `VI
 
 - **Windows**: double-click `start.bat`. It starts the server in a minimized window and opens the app in Edge or Chrome app mode. Close the "WCA Stage server" window to stop.
 - **Linux (Debian 10 or newer)**: run `sh start.sh`. It works best with Chromium (`sudo apt install chromium`). Closing the browser window stops the server.
-- The app runs at <http://localhost:5173> and listens on 127.0.0.1 only.
+- The app runs at <http://localhost:5173>. It also listens on the network, so TVs on the same Wi-Fi can open the projector (see **TV screens** on the control screen). Windows asks once whether to allow Node.js through the firewall. Start the server with `HOST=127.0.0.1` to keep it on this PC only.
 - The launchers use their own browser profile in `data/`, so the app keeps its state even if the PC's normal browser is cleared.
 
 ### Move or back up a competition
@@ -497,6 +504,7 @@ Event names, record texts and templates are translated when shown. A record anno
 | "No assignments found" | Generate groups with Groupifier, Delegate Dashboard or AGE, then press "Refresh from WCA". |
 | No results on the projector | The competition must exist on WCA Live under the same WCA ID. Otherwise the app falls back to results in the WCIF, which have no record tags. |
 | Projector shows "Open this competition on the control screen first" | Both windows must run in the same browser profile. Open the projector with the "Open projector" button. |
+| A TV cannot open the projector | Open **TV screens** on the control screen and expand "The TV cannot open the page?". Test with a phone first. The usual causes are the Windows firewall, a Wi-Fi set as "Public", or a guest Wi-Fi that isolates devices. |
 | The noise meter does nothing | Turn it on in Options, allow the microphone, then click once in the projector window. Options shows the live level. |
 | Only one PDF downloads | The browser asks once to allow multiple downloads. Allow it. The three files are in `reports/<competition>/` either way, when the local server runs. |
 | The records PDF has no records | Record tags come from WCA Live. Competitions that WCA Live does not list have no tags. |
@@ -507,7 +515,7 @@ Event names, record texts and templates are translated when shown. A record anno
 
 - **Scrambles are never stored or shown.** The app removes scramble sets from the WCIF right after download.
 - The WCA login token stays in the browser's `localStorage` only. It never goes to `data/`.
-- The local server listens on 127.0.0.1, so other PCs on the network cannot reach it.
+- The local server listens on the network for TV screens. Other devices get read-only access to the projector state only: no incidents, no control settings, no saving. Anyone on the same Wi-Fi who knows the address can watch the projector, as they could in the room. Set `HOST=127.0.0.1` to turn this off.
 - `data/` holds registrant names, WCA IDs and incidents. Treat it as personal data, and delete it after the competition if you do not need it.
 
 ## License
