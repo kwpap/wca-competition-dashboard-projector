@@ -224,7 +224,7 @@ The release build takes the WCA OAuth client ID from the repository variable `VI
 
 - **Windows**: double-click `start.bat`. It starts the server in a minimized window and opens the app in Edge or Chrome app mode. Close the "WCA Stage server" window to stop.
 - **Linux (Debian 10 or newer)**: run `sh start.sh`. It works best with Chromium (`sudo apt install chromium`). Closing the browser window stops the server.
-- The app runs at <http://localhost:5173>. It also listens on the network, so TVs on the same Wi-Fi can open the projector (see **TV screens** on the control screen). Windows asks once whether to allow Node.js through the firewall. Start the server with `HOST=127.0.0.1` to keep it on this PC only.
+- The app runs at <http://localhost:5173>. It also listens on the network, so TVs on the same Wi-Fi can open the projector (see **TV screens** on the control screen). Windows asks once whether to allow Node.js through the firewall. Start the server with `WCA_STAGE_HOST=127.0.0.1` to keep it on this PC only.
 - The launchers use their own browser profile in `data/`, so the app keeps its state even if the PC's normal browser is cleared.
 
 ### Move or back up a competition
@@ -504,6 +504,7 @@ Event names, record texts and templates are translated when shown. A record anno
 | "No assignments found" | Generate groups with Groupifier, Delegate Dashboard or AGE, then press "Refresh from WCA". |
 | No results on the projector | The competition must exist on WCA Live under the same WCA ID. Otherwise the app falls back to results in the WCIF, which have no record tags. |
 | Projector shows "Open this competition on the control screen first" | Both windows must run in the same browser profile. Open the projector with the "Open projector" button. |
+| Windows: a window flashes and the app shows "This site can't be reached" | Unblock the zip before extracting (right-click, Properties, Unblock), extract it, and run `start.bat` from the extracted folder. `start.bat` waits for the server and shows its error when it does not start. The server also writes `data\server.log`. |
 | A TV cannot open the projector | Open **TV screens** on the control screen and expand "The TV cannot open the page?". Test with a phone first. The usual causes are the Windows firewall, a Wi-Fi set as "Public", or a guest Wi-Fi that isolates devices. |
 | The noise meter does nothing | Turn it on in Options, allow the microphone, then click once in the projector window. Options shows the live level. |
 | Only one PDF downloads | The browser asks once to allow multiple downloads. Allow it. The three files are in `reports/<competition>/` either way, when the local server runs. |
@@ -515,7 +516,7 @@ Event names, record texts and templates are translated when shown. A record anno
 
 - **Scrambles are never stored or shown.** The app removes scramble sets from the WCIF right after download.
 - The WCA login token stays in the browser's `localStorage` only. It never goes to `data/`.
-- The local server listens on the network for TV screens. Other devices get read-only access to the projector state only: no incidents, no control settings, no saving. Anyone on the same Wi-Fi who knows the address can watch the projector, as they could in the room. Set `HOST=127.0.0.1` to turn this off.
+- The local server listens on the network for TV screens. Other devices get read-only access to the projector state only: no incidents, no control settings, no saving. Anyone on the same Wi-Fi who knows the address can watch the projector, as they could in the room. Set `WCA_STAGE_HOST=127.0.0.1` to turn this off.
 - `data/` holds registrant names, WCA IDs and incidents. Treat it as personal data, and delete it after the competition if you do not need it.
 
 ## License

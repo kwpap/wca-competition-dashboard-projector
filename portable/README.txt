@@ -2,7 +2,11 @@ WCA Stage - portable
 ====================
 
 Start
-  Windows: double-click start.bat
+  Windows: first right-click the downloaded zip, choose Properties, tick
+           "Unblock" and press OK. Then "Extract All" and double-click
+           start.bat in the extracted folder.
+           If it does not start, start.bat shows the reason, and
+           data\server.log keeps it.
   Linux:   sh start.sh
 
 The app opens in its own browser window. Close the window "WCA Stage server"

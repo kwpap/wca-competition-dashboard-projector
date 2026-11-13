@@ -374,7 +374,7 @@
     "title": "TV screens",
     "intro": "Show the projector on a smart TV, phone or laptop on the same Wi-Fi. Nothing to install and nothing to set up on the TV.",
     "noServer": "TV screens need the app's local server. Start the app with start.bat (Windows) or start.sh (Linux), or with npm run dev.",
-    "lanOff": "The server accepts this computer only (HOST=127.0.0.1). Start it without HOST to allow TV screens.",
+    "lanOff": "TV screens are off. Either Windows or security software refused network access to the app, or WCA_STAGE_HOST=127.0.0.1 is set. The reason is in data\\server.log. Restart the app after fixing it.",
     "noNetwork": "This computer is not connected to a network. Connect it to the Wi-Fi first.",
     "step1": "Connect the TV to the same Wi-Fi as this computer.",
     "step2": "Open the web browser on the TV and type this address:",

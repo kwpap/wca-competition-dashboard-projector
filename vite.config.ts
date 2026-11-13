@@ -17,7 +17,7 @@ function localApi(): Plugin {
       const handleApi = createApi({
         dataDir: path.resolve('data'),
         reportsDir: path.resolve('reports'),
-        lan: true,
+        lan: () => true,
       });
       server.middlewares.use((req, res, next) => {
         handleApi(req, res).then((handled) => {

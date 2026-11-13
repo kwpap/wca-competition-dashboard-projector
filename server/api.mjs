@@ -173,7 +173,7 @@ async function screenState(stateDir, competitionId, have) {
  *   GET /api/screens                    saved competitions and the control screen language
  *   GET /api/screen/:competition?have=  projector state of one competition
  * Requests from other devices get only the TV routes. They can never change anything.
- * `lan` says whether the server listens on the network at all.
+ * `lan()` says whether the server listens on the network at all.
  */
 export function createApi({ dataDir, reportsDir, lan }) {
   const stateDir = path.join(dataDir, 'state');
@@ -224,7 +224,7 @@ export function createApi({ dataDir, reportsDir, lan }) {
           else connected.push({ address, competitionId: screen.competitionId, seenAt: screen.seenAt });
         }
         sendJson(res, 200, {
-          lan: Boolean(lan),
+          lan: lan(),
           port: req.socket.localPort,
           addresses: networkAddresses(),
           screens: connected,

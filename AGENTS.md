@@ -68,7 +68,7 @@ src/i18n/                       en.json, el.json, i18next setup.
 src/format/                     Time, result and download helpers.
 src/types/wcif.ts               The WCIF subset the app uses.
 server/api.mjs                  Local API: GET/PUT state, PUT reports (.csv, .md, .pdf). Shared by dev and portable.
-server/server.mjs               Portable server: serves app/ and the API on 0.0.0.0:5173 (HOST=127.0.0.1 for local only).
+server/server.mjs               Portable server: serves app/ and the API on port 5173, all addresses (WCA_STAGE_HOST=127.0.0.1 for local only).
 scripts/build-portable.mjs      Builds release/WCA-Stage from dist/, server/ and portable/.
 portable/                       start.bat, start.sh and README.txt for the portable folder.
 data/, reports/, release/       Generated. Git-ignored. Never commit them.

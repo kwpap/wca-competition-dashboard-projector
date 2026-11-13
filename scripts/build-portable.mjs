@@ -9,7 +9,8 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'release', 'WCA-Stage');
 const CACHE = path.join(ROOT, '.cache', 'node');
-const NODE_VERSION = process.version;
+// Bundles the Node.js that runs this script, unless PORTABLE_NODE_VERSION (e.g. v24.22.3) names another.
+const NODE_VERSION = process.env.PORTABLE_NODE_VERSION || process.version;
 const bundleNode = !process.argv.includes('--no-node');
 
 async function exists(filePath) {
