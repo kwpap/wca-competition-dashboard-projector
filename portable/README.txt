@@ -25,6 +25,12 @@ Folders
   server\    small local server (plain Node.js)
   node\      bundled Node.js for Windows and Linux
 
+Updating to a new version
+  Unzip the new version into its own folder. Then copy the data\ folder from
+  the old WCA-Stage folder into the new one, replacing the empty one. It holds
+  your saved competitions, schedule logs, incidents and your WCA login.
+  Close the old version first: only one copy can run at a time.
+
 Notes
   - Public competition data works without login.
   - Press "Log in with WCA" to load the competitions you manage.

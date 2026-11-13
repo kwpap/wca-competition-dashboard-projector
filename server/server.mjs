@@ -84,10 +84,14 @@ server.on('error', (error) => {
 server.listen(PORT, HOST, () => {
   console.log(`WCA Stage running at http://localhost:${PORT}`);
   if (LAN) {
-    for (const { address } of Object.values(os.networkInterfaces()).flat()) {
-      if (address && /^\d+\.\d+\.\d+\.\d+$/.test(address) && !address.startsWith('127.')) {
-        console.log(`TV screens: http://${address}:${PORT}`);
+    try {
+      for (const { address } of Object.values(os.networkInterfaces()).flat()) {
+        if (address && /^\d+\.\d+\.\d+\.\d+$/.test(address) && !address.startsWith('127.')) {
+          console.log(`TV screens: http://${address}:${PORT}`);
+        }
       }
+    } catch {
+      // Only a hint. The app works without it.
     }
   }
   console.log(`Data:    ${path.join(ROOT, 'data')}`);

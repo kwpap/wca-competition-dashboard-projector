@@ -62,7 +62,14 @@ function isLocalRequest(req) {
 /** The IPv4 addresses of this computer on its networks, likely Wi-Fi or Ethernet first. */
 function networkAddresses() {
   const list = [];
-  for (const [name, infos] of Object.entries(os.networkInterfaces())) {
+  let interfaces = {};
+  try {
+    interfaces = os.networkInterfaces();
+  } catch {
+    // Some systems refuse to list adapters. The wizard then says "not connected".
+    return list;
+  }
+  for (const [name, infos] of Object.entries(interfaces)) {
     for (const info of infos ?? []) {
       const isIpv4 = info.family === 'IPv4' || info.family === 4;
       // 169.254.x.x means the adapter got no address from a router.
